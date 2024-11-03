@@ -36,7 +36,7 @@ fun RoundedCornerOutlinedTextField(
         shape = RoundedCornerShape(25.dp),
         colors = OutlinedTextFieldDefaults.colors().copy(
             focusedIndicatorColor = Color.Transparent,
-            unfocusedTextColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
             focusedContainerColor = Color.White.copy(alpha = 0.5f),
             unfocusedContainerColor = Color.White.copy(alpha = 0.5f),
 

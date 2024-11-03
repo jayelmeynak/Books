@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -32,10 +32,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.books.R
+import com.example.books.presentation.data.LoginScreenObject
+import com.example.books.presentation.data.MainScreenDataObject
 import com.example.books.ui.theme.FilterColor
 
 @Composable
-fun SignInScreen(innerPadding: PaddingValues) {
+fun SignInScreen(
+    navigateToLoginScreen: (LoginScreenObject) -> Unit,
+    navigateToMainScreen: (MainScreenDataObject) -> Unit
+) {
     val viewModel: LoginViewModel = viewModel()
     val passwordVisible = remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -48,99 +53,115 @@ fun SignInScreen(innerPadding: PaddingValues) {
         contentScale = ContentScale.Crop
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .background(FilterColor)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        focusManager.clearFocus()
-                        keyboardController?.hide()
-                    }
-                )
-            },
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
+    Scaffold { innerPadding ->
 
-        RoundedCornerOutlinedTextField(
-            value = viewModel.email.value,
-            isError = !viewModel.emailCorrect.value,
-            label = "Email",
-            keyboardType = KeyboardType.Email,
-            onValueChanged = {
-                viewModel.email.value = it
-                viewModel.validateEmail()
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        RoundedCornerOutlinedTextField(
-            value = viewModel.password.value,
-            isError = !viewModel.passwordCorrect.value,
-            label = "Password",
-            keyboardType = KeyboardType.Password,
-            visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
-            onValueChanged = {
-                viewModel.password.value = it
-                viewModel.validatePassword()
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth(0.85f)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(FilterColor)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        }
+                    )
+                },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Checkbox(
-                checked = passwordVisible.value,
-                onCheckedChange = { passwordVisible.value = it }
+
+            RoundedCornerOutlinedTextField(
+                value = viewModel.email.value,
+                isError = !viewModel.emailCorrect.value,
+                label = "Email",
+                keyboardType = KeyboardType.Email,
+                onValueChanged = {
+                    viewModel.email.value = it
+                    viewModel.validateEmail()
+                }
             )
-            Text(
-                text = "Show password",
-                modifier = Modifier.clickable { passwordVisible.value = !passwordVisible.value })
-        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        if (!viewModel.emailCorrect.value) {
-            Text(
-                text = "The email was entered incorrectly",
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier
-                    .padding(top = 4.dp)
-                    .fillMaxWidth(0.8f)
+            RoundedCornerOutlinedTextField(
+                value = viewModel.password.value,
+                isError = !viewModel.passwordCorrect.value,
+                label = "Password",
+                keyboardType = KeyboardType.Password,
+                visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
+                onValueChanged = {
+                    viewModel.password.value = it
+                    viewModel.validatePassword()
+                }
             )
-        }
-        if (!viewModel.passwordCorrect.value) {
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(0.85f)
+            ) {
+                Checkbox(
+                    checked = passwordVisible.value,
+                    onCheckedChange = { passwordVisible.value = it }
+                )
+                Text(
+                    text = "Show password",
+                    modifier = Modifier.clickable {
+                        passwordVisible.value = !passwordVisible.value
+                    })
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (!viewModel.emailCorrect.value) {
+                Text(
+                    text = "The email was entered incorrectly",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .fillMaxWidth(0.8f)
+                )
+            }
+            if (!viewModel.passwordCorrect.value) {
+                Text(
+                    text = "The password must contain at least 6 characters",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .fillMaxWidth(0.8f)
+                )
+            }
+
+            if (viewModel.errorMessage.value.isNotEmpty()) {
+                Text(
+                    text = viewModel.errorMessage.value,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .fillMaxWidth(0.8f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
-                text = "The password must contain at least 6 characters",
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier
-                    .padding(top = 4.dp)
-                    .fillMaxWidth(0.8f)
+                modifier = Modifier.clickable {
+                    navigateToLoginScreen(LoginScreenObject)
+                },
+                text = "Еще нет аккаунта? Зарегистрироваться"
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LoginButton("Sign in") {
+                viewModel.signIn(signInSuccess = { navData ->
+                    navigateToMainScreen(navData)
+                })
+            }
+
         }
-
-        if (viewModel.errorMessage.value.isNotEmpty()) {
-            Text(
-                text = viewModel.errorMessage.value,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier
-                    .padding(top = 4.dp)
-                    .fillMaxWidth(0.8f)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LoginButton("Sign up") {
-            viewModel.signIn()
-        }
-
     }
 }

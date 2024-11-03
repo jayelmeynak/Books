@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     id("com.google.gms.google-services") version "4.4.2"
     id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -62,6 +63,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

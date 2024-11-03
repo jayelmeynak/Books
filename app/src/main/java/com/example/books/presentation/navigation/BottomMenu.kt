@@ -1,4 +1,4 @@
-package com.example.books.presentation.mainScreen.bottom_menu
+package com.example.books.presentation.navigation
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -8,21 +8,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 
 @Composable
-fun BottomMenu(){
+fun BottomMenu(navController: NavController, navigateToItem: (Screen) -> Unit){
     val items = listOf(
-        BottomMenuItem.Home,
-        BottomMenuItem.Favorites,
-        BottomMenuItem.Settings
+        Screen.HomeScreen,
+        Screen.FavoritesScreen,
+        Screen.SettingsScreen
     )
-    val selectedItem = remember { mutableStateOf("home") }
+    val currentRoute = navController.currentBackStackEntry?.destination?.route
+
+    val selectedItem = remember { mutableStateOf(currentRoute) }
     NavigationBar {
         items.forEach { item ->
             NavigationBarItem(
                 selected = selectedItem.value == item.route,
                 onClick = {
                     selectedItem.value = item.route
+                    navigateToItem(item)
                 },
                 icon = {
                     Icon(painter = painterResource(id = item.icon), contentDescription = item.title)

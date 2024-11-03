@@ -3,6 +3,7 @@ package com.example.books.presentation.login
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.books.presentation.data.MainScreenDataObject
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -44,12 +45,14 @@ class LoginViewModel : ViewModel() {
         return emailCorrect.value && passwordCorrect.value
     }
 
-    fun createAccount() {
+    fun createAccount(signInSuccess: (MainScreenDataObject) -> Unit) {
         if (validateFormForLogin()) {
             auth.createUserWithEmailAndPassword(email.value, password.value)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d("MyLog", "Account created")
+                        val data = MainScreenDataObject(email = email.value, uid = task.result.user?.uid ?: "")
+                        signInSuccess(data)
                     } else {
                         Log.d("MyLog", "Account creation failed: ${task.exception?.message}")
                         errorMessage.value = task.exception?.message ?: "Unknown error"
@@ -58,12 +61,14 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun signIn() {
+    fun signIn(signInSuccess: (MainScreenDataObject) -> Unit) {
         if (validateFormForSignIn()) {
             auth.signInWithEmailAndPassword(email.value, password.value)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d("MyLog", "Sign in successful")
+                        val data = MainScreenDataObject(email = email.value, uid = task.result.user?.uid ?: "")
+                        signInSuccess(data)
                     } else {
                         Log.d("MyLog", "Sign in failed: ${task.exception?.message}")
                         errorMessage.value = task.exception?.message ?: "Unknown error"
