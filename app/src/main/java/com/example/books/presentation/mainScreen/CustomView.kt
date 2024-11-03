@@ -40,7 +40,7 @@ fun DrawerHeader() {
         verticalArrangement = Arrangement.Center
     ) {
 
-        Spacer(modifier = Modifier.height(40.dp))
+//        Spacer(modifier = Modifier.height(40.dp))
 
         Image(
             painter = painterResource(id = R.drawable.books),
@@ -74,7 +74,7 @@ fun DrawerBody() {
     )
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().background(Color.Black)
     ) {
         Image(
             painter = painterResource(id = R.drawable.background),

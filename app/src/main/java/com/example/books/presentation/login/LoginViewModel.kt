@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
-class LoginViewModel:ViewModel() {
+class LoginViewModel : ViewModel() {
     val email = mutableStateOf("")
     val password = mutableStateOf("")
     val confirmPassword = mutableStateOf("")
@@ -16,18 +16,19 @@ class LoginViewModel:ViewModel() {
     val auth = Firebase.auth
     val errorMessage = mutableStateOf("")
 
-
-
     fun validateEmail() {
-        emailCorrect.value = android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
+        emailCorrect.value =
+            email.value.isNotBlank() && android.util.Patterns.EMAIL_ADDRESS.matcher(email.value)
+                .matches()
     }
 
     fun validatePassword() {
-        passwordCorrect.value = password.value.length >= 6 && password.value.length <= 24
+        passwordCorrect.value = password.value.isNotBlank() && password.value.length in 6..24
     }
 
     fun validateConfirmPassword() {
-        confirmPasswordCorrect.value = password.value == confirmPassword.value
+        confirmPasswordCorrect.value =
+            confirmPassword.value.isNotBlank() && confirmPassword.value == password.value
     }
 
     fun validateFormForLogin(): Boolean {
@@ -43,33 +44,31 @@ class LoginViewModel:ViewModel() {
         return emailCorrect.value && passwordCorrect.value
     }
 
-
-    fun createAccount(){
+    fun createAccount() {
         if (validateFormForLogin()) {
             auth.createUserWithEmailAndPassword(email.value, password.value)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Log.d("MyLog","Account created")
+                        Log.d("MyLog", "Account created")
                     } else {
-                        Log.d("MyLog","Account creation failed: ${task.exception?.message}")
+                        Log.d("MyLog", "Account creation failed: ${task.exception?.message}")
                         errorMessage.value = task.exception?.message ?: "Unknown error"
                     }
                 }
         }
     }
 
-    fun signIn(){
+    fun signIn() {
         if (validateFormForSignIn()) {
             auth.signInWithEmailAndPassword(email.value, password.value)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Log.d("MyLog","Sign in succesfull")
+                        Log.d("MyLog", "Sign in successful")
                     } else {
-                        Log.d("MyLog","Sign in failed: ${task.exception?.message}")
+                        Log.d("MyLog", "Sign in failed: ${task.exception?.message}")
                         errorMessage.value = task.exception?.message ?: "Unknown error"
                     }
                 }
         }
     }
-
 }
