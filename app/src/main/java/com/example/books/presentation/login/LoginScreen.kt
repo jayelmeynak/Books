@@ -75,7 +75,6 @@ fun LoginScreen(navigateToMainScreen: (MainScreenDataObject) -> Unit) {
                 keyboardType = KeyboardType.Email,
                 onValueChanged = {
                     viewModel.email.value = it
-                    viewModel.validateEmail()
                 }
             )
 
@@ -89,7 +88,6 @@ fun LoginScreen(navigateToMainScreen: (MainScreenDataObject) -> Unit) {
                 visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
                 onValueChanged = {
                     viewModel.password.value = it
-                    viewModel.validatePassword()
                 }
             )
 
@@ -166,7 +164,7 @@ fun LoginScreen(navigateToMainScreen: (MainScreenDataObject) -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            LoginButton("Sign up") {
+            RoundedCornerButton(text = "Sign up") {
                 viewModel.createAccount(signInSuccess = { navData ->
                     navigateToMainScreen(navData)
                 }

@@ -32,14 +32,14 @@ class LoginViewModel : ViewModel() {
             confirmPassword.value.isNotBlank() && confirmPassword.value == password.value
     }
 
-    fun validateFormForLogin(): Boolean {
+    private fun validateFormForLogin(): Boolean {
         validateEmail()
         validatePassword()
         validateConfirmPassword()
         return emailCorrect.value && passwordCorrect.value && confirmPasswordCorrect.value
     }
 
-    fun validateFormForSignIn(): Boolean {
+    private fun validateFormForSignIn(): Boolean {
         validateEmail()
         validatePassword()
         return emailCorrect.value && passwordCorrect.value
@@ -59,6 +59,17 @@ class LoginViewModel : ViewModel() {
                     }
                 }
         }
+        else{
+            if(!emailCorrect.value){
+                errorMessage.value = "Введите email правильно"
+            }
+            if(!passwordCorrect.value){
+                errorMessage.value = "Пароль должен содержать от 6 до 24 символов"
+            }
+            if(!confirmPasswordCorrect.value){
+                errorMessage.value = "Пароли не совпадают"
+            }
+        }
     }
 
     fun signIn(signInSuccess: (MainScreenDataObject) -> Unit) {
@@ -74,6 +85,14 @@ class LoginViewModel : ViewModel() {
                         errorMessage.value = task.exception?.message ?: "Unknown error"
                     }
                 }
+        }
+        else{
+            if(!emailCorrect.value){
+                errorMessage.value = "Введите email правильно"
+            }
+            if(!passwordCorrect.value){
+                errorMessage.value = "Пароль должен содержать от 6 до 24 символов"
+            }
         }
     }
 }

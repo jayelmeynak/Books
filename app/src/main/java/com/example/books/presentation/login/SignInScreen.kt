@@ -156,7 +156,7 @@ fun SignInScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            LoginButton("Sign in") {
+            RoundedCornerButton(text = "Sign in") {
                 viewModel.signIn(signInSuccess = { navData ->
                     navigateToMainScreen(navData)
                 })

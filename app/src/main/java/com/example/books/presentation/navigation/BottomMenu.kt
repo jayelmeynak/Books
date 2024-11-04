@@ -25,8 +25,10 @@ fun BottomMenu(navController: NavController, navigateToItem: (Screen) -> Unit){
             NavigationBarItem(
                 selected = selectedItem.value == item.route,
                 onClick = {
-                    selectedItem.value = item.route
-                    navigateToItem(item)
+                    if(selectedItem.value != item.route) {
+                        selectedItem.value = item.route
+                        navigateToItem(item)
+                    }
                 },
                 icon = {
                     Icon(painter = painterResource(id = item.icon), contentDescription = item.title)
