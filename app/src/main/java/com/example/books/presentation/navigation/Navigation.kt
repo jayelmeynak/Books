@@ -97,9 +97,15 @@ fun Navigation() {
                 previousScreen = currentScreen
                 currentScreen = item
                 if (item.route == Screen.ROUTE_HOME) {
-                    navController.navigate(navData)
+                    navController.navigate(navData) {
+                        popUpTo(startDestination) {
+                            inclusive = true
+                        }
+                    }
                 } else {
-                    navController.navigate(item.route)
+                    navController.navigate(item.route){
+                        popUpTo(startDestination) { inclusive = true }
+                    }
                 }
             }
         }
@@ -151,7 +157,12 @@ fun Navigation() {
             AddBookScreen{
                 previousScreen = currentScreen
                 currentScreen = Screen.HomeScreen
-                navController.popBackStack()
+                navController.navigate(MainScreenDataObject(
+                    uid = user?.uid ?: "",
+                    email = user?.email ?: ""
+                )){
+                    popUpTo(startDestination) { inclusive = true }
+                }
             }
         }
     }
