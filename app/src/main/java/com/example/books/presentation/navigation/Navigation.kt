@@ -64,7 +64,11 @@ fun Navigation() {
         composable<LoginScreenObject> {
             previousScreen = currentScreen
             currentScreen = Screen.LoginScreen
-            LoginScreen() { navData ->
+            LoginScreen(navigateToSignInScreen = {
+                navController.navigate(SignInObject){
+                    popUpTo(startDestination) { inclusive = true }
+                }
+            }) { navData ->
                 navController.navigate(navData) {
                     popUpTo(startDestination) { inclusive = true }
                 }
@@ -75,7 +79,9 @@ fun Navigation() {
             previousScreen = currentScreen
             currentScreen = Screen.SignInScreen
             SignInScreen(navigateToLoginScreen = {
-                navController.navigate(LoginScreenObject)
+                navController.navigate(LoginScreenObject){
+                    popUpTo(startDestination) { inclusive = true }
+                }
             }) { navData ->
                 navController.navigate(navData) {
                     popUpTo(startDestination) { inclusive = true }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -151,7 +152,8 @@ fun SignInScreen(
                 modifier = Modifier.clickable {
                     navigateToLoginScreen(LoginScreenObject)
                 },
-                text = "Еще нет аккаунта? Зарегистрироваться"
+                text = "Еще нет аккаунта? Зарегистрироваться",
+                color = Color.Blue
             )
 
             Spacer(modifier = Modifier.height(16.dp))

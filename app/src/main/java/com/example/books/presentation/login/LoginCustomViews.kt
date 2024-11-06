@@ -65,6 +65,9 @@ fun RoundedCornerButton(
             containerColor = color
         )
     ) {
-        Text(text = text)
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+        )
     }
 }
