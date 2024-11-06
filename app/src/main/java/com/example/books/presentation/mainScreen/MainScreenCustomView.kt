@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -32,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.example.books.R
 import com.example.books.ui.theme.DarkBlue
 import com.example.books.ui.theme.GrayLight
@@ -175,5 +178,46 @@ fun DrawerBody(
                 }
             }
         }
+    }
+}
+
+
+@Composable
+fun BookListItemUi(){
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp)
+    ) {
+        AsyncImage(
+            modifier = Modifier.fillMaxWidth().height(250.dp).clip(RoundedCornerShape(15.dp)),
+            model = R.drawable.img,
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            text = "Harry Potter",
+            color = MaterialTheme.colorScheme.onBackground,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Text(
+            text = "Description",
+            color = MaterialTheme.colorScheme.onSurface,
+            fontSize = 14.sp
+        )
+
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Text(
+            text = "50$",
+            color = Color.Blue,
+            fontSize = 14.sp
+        )
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
