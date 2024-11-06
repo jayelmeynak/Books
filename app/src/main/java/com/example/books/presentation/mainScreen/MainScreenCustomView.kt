@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.books.R
+import com.example.books.domain.Book
 import com.example.books.ui.theme.DarkBlue
 import com.example.books.ui.theme.GrayLight
 
@@ -183,13 +184,13 @@ fun DrawerBody(
 
 
 @Composable
-fun BookListItemUi(){
+fun BookListItemUi(book: Book){
     Column(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp)
     ) {
         AsyncImage(
             modifier = Modifier.fillMaxWidth().height(250.dp).clip(RoundedCornerShape(15.dp)),
-            model = R.drawable.img,
+            model = book.imageUrl,
             contentDescription = null,
             contentScale = ContentScale.FillBounds
         )
@@ -197,7 +198,7 @@ fun BookListItemUi(){
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "Harry Potter",
+            text = book.title,
             color = MaterialTheme.colorScheme.onBackground,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
@@ -206,7 +207,7 @@ fun BookListItemUi(){
         Spacer(modifier = Modifier.height(5.dp))
 
         Text(
-            text = "Description",
+            text = book.description,
             color = MaterialTheme.colorScheme.onSurface,
             fontSize = 14.sp
         )
@@ -214,7 +215,7 @@ fun BookListItemUi(){
         Spacer(modifier = Modifier.height(5.dp))
 
         Text(
-            text = "50$",
+            text = "${book.price}$",
             color = Color.Blue,
             fontSize = 14.sp
         )
