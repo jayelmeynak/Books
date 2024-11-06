@@ -32,17 +32,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil3.compose.rememberAsyncImagePainter
 import com.example.books.R
 import com.example.books.presentation.login.RoundedCornerButton
 import com.example.books.presentation.login.RoundedCornerOutlinedTextField
+import com.example.books.presentation.navigation.BottomMenu
+import com.example.books.presentation.navigation.Screen
 import com.example.books.ui.theme.FilterColor
 
 
 @Composable
 fun AddBookScreen(
-//    navController: NavController,
-//    navigateToItem: (Screen) -> Unit
+    navController: NavController,
+    navigateToItem: (Screen) -> Unit,
     onSaved: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -54,11 +57,11 @@ fun AddBookScreen(
             viewModel.setImageUri(it)
         }
     Scaffold(
-//        bottomBar = {
-//            BottomMenu(navController) { item ->
-//                navigateToItem(item)
-//            }
-//        }
+        bottomBar = {
+            BottomMenu(navController) { item ->
+                navigateToItem(item)
+            }
+        }
     ) { innerPadding ->
 
         Box(

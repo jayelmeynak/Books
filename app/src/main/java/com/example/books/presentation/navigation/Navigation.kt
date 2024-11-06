@@ -65,7 +65,7 @@ fun Navigation() {
             previousScreen = currentScreen
             currentScreen = Screen.LoginScreen
             LoginScreen(navigateToSignInScreen = {
-                navController.navigate(SignInObject){
+                navController.navigate(SignInObject) {
                     popUpTo(startDestination) { inclusive = true }
                 }
             }) { navData ->
@@ -79,7 +79,7 @@ fun Navigation() {
             previousScreen = currentScreen
             currentScreen = Screen.SignInScreen
             SignInScreen(navigateToLoginScreen = {
-                navController.navigate(LoginScreenObject){
+                navController.navigate(LoginScreenObject) {
                     popUpTo(startDestination) { inclusive = true }
                 }
             }) { navData ->
@@ -103,7 +103,7 @@ fun Navigation() {
                         }
                     }
                 } else {
-                    navController.navigate(item.route){
+                    navController.navigate(item.route) {
                         popUpTo(startDestination) { inclusive = true }
                     }
                 }
@@ -154,16 +154,41 @@ fun Navigation() {
         composable(Screen.ROUTE_ADD_BOOK) {
             previousScreen = currentScreen
             currentScreen = Screen.AddBookScreen
-            AddBookScreen{
-                previousScreen = currentScreen
-                currentScreen = Screen.HomeScreen
-                navController.navigate(MainScreenDataObject(
-                    uid = user?.uid ?: "",
-                    email = user?.email ?: ""
-                )){
-                    popUpTo(startDestination) { inclusive = true }
+            AddBookScreen(
+                navController = navController,
+                navigateToItem = { item ->
+                    previousScreen = currentScreen
+                    currentScreen = item
+                    if (item.route == Screen.ROUTE_HOME) {
+                        val navData = MainScreenDataObject(
+                            uid = user?.uid ?: "",
+                            email = user?.email ?: ""
+                        )
+                        navController.navigate(navData) {
+                            popUpTo(startDestination) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    } else {
+                        navController.navigate(item.route) {
+                            popUpTo(startDestination) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                },
+                onSaved = {
+                    previousScreen = currentScreen
+                    currentScreen = Screen.HomeScreen
+                    navController.navigate(
+                        MainScreenDataObject(
+                            uid = user?.uid ?: "",
+                            email = user?.email ?: ""
+                        )
+                    ) {
+                        popUpTo(startDestination) { inclusive = true }
+                        launchSingleTop = true
+                    }
                 }
-            }
+            )
         }
     }
 }
