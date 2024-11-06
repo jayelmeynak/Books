@@ -18,6 +18,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -184,41 +187,56 @@ fun DrawerBody(
 
 
 @Composable
-fun BookListItemUi(book: Book){
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp)
+fun BookListItemUi(book: Book) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+            .clip(RoundedCornerShape(15.dp)),
+        elevation = CardDefaults.cardElevation(5.dp)
+
     ) {
-        AsyncImage(
-            modifier = Modifier.fillMaxWidth().height(250.dp).clip(RoundedCornerShape(15.dp)),
-            model = book.imageUrl,
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds
-        )
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .padding(10.dp)
+        ) {
+            AsyncImage(
+                modifier = Modifier.fillMaxWidth().height(250.dp).clip(RoundedCornerShape(15.dp)),
+                model = book.imageUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
 
-        Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-        Text(
-            text = book.title,
-            color = MaterialTheme.colorScheme.onBackground,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
+            Text(
+                modifier = Modifier.padding(start = 5.dp),
+                text = book.title,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
 
-        Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
-        Text(
-            text = book.description,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontSize = 14.sp
-        )
+            Text(
+                modifier = Modifier.padding(start = 5.dp),
+                text = book.description,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 14.sp
+            )
 
-        Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
-        Text(
-            text = "${book.price}$",
-            color = Color.Blue,
-            fontSize = 14.sp
-        )
-        Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                modifier = Modifier.padding(start = 5.dp),
+                text = "${book.price}$",
+                color = Color.Blue,
+                fontSize = 14.sp,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+        }
     }
 }
