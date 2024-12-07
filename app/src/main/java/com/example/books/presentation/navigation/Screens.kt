@@ -1,6 +1,10 @@
 package com.example.books.presentation.navigation
 
+import android.net.Uri
 import com.example.books.R
+import com.example.books.domain.Book
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 sealed class Screen(
     val title: String,
@@ -13,6 +17,17 @@ sealed class Screen(
     object FavoritesScreen : Screen("Favorites", ROUTE_FAVORITE, R.drawable.ic_favorite)
     object AddBookScreen : Screen("AddBook", ROUTE_ADD_BOOK, R.drawable.ic_add_book)
     object SettingsScreen : Screen("Settings", ROUTE_SETTINGS, R.drawable.ic_settings)
+    data class EditBookScreen(val bookJson: String) :
+        Screen("Edit Book", "editBook?book={bookJson}", R.drawable.ic_edit) {
+
+        companion object {
+            fun createRoute(book: Book): String {
+                val newBook = book.copy(imageUrl = Uri.encode(book.imageUrl))
+                val json = Uri.encode(Json.encodeToString(newBook))
+                return "editBook?book=$json"
+            }
+        }
+    }
 
 
     companion object {

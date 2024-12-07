@@ -7,25 +7,31 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class MainViewModel: ViewModel() {
+class MainViewModel : ViewModel() {
 
     val listBooks = mutableStateOf(emptyList<Book>())
     val loadingState = mutableStateOf(false)
+    val isAdminState = mutableStateOf(false)
 
     init {
         loadingState.value = true
         getBooks {
             listBooks.value = it
         }
+        checkAdminStatus()
     }
 
-
-
-    fun isAdmin(onAdmin: (Boolean) -> Unit) {
-        val uid = Firebase.auth.currentUser?.uid ?: ""
-        Firebase.firestore.collection("admin").document(uid).get().addOnSuccessListener {
-            onAdmin(it.get("isAdmin") as Boolean)
-        }
+    private fun checkAdminStatus() {
+        val uid = Firebase.auth.currentUser?.uid ?: return
+        Firebase.firestore.collection("admin")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { document ->
+                isAdminState.value = document.get("isAdmin") as? Boolean ?: false
+            }
+            .addOnFailureListener {
+                isAdminState.value = false
+            }
     }
 
     fun getBooks(onBooks: (List<Book>) -> Unit) {

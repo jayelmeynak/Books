@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.books.ui.theme.DarkBlue
 
 @Composable
 fun RoundedCornerOutlinedTextField(
@@ -41,9 +42,10 @@ fun RoundedCornerOutlinedTextField(
         colors = OutlinedTextFieldDefaults.colors().copy(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            focusedContainerColor = Color.White.copy(alpha = 0.5f),
-            unfocusedContainerColor = Color.White.copy(alpha = 0.5f),
-
+            focusedContainerColor = Color.White.copy(alpha = 0.8f),
+            unfocusedContainerColor = Color.White.copy(alpha = 0.8f),
+            focusedTextColor = DarkBlue.copy(alpha = 0.8f),
+            unfocusedTextColor = DarkBlue
         ),
         singleLine = singleLine,
         maxLines = maxLine

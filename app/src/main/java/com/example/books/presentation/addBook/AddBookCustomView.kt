@@ -18,15 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.books.ui.theme.DarkBlue
 
 @Composable
 fun RoundedCornerDropDownMenu(
     onCategorySelected: (String) -> Unit
 ) {
-
-
     val expanded = remember { mutableStateOf(false) }
-    val selectedCategory = remember { mutableStateOf("Click to select a category") }
+    val viewModel: AddEditBookViewModel = viewModel()
     val categoryList = listOf(
         "Fantasy",
         "Drama",
@@ -45,15 +45,13 @@ fun RoundedCornerDropDownMenu(
             .clickable {
                 expanded.value = !expanded.value
             }
-            .background(Color.White.copy(alpha = 0.5f))
+            .background(Color.White.copy(alpha = 0.8f))
 
     ) {
 
         Text(
-            text = selectedCategory.value,
-            color = if (selectedCategory.value == "Click to select a category") MaterialTheme.colorScheme.onSurface.copy(
-                alpha = 0.5f
-            ) else MaterialTheme.colorScheme.onSurface,
+            text = viewModel.selectedCategory.value,
+            color = DarkBlue,
             modifier = Modifier
                 .padding(16.dp)
         )
@@ -69,13 +67,11 @@ fun RoundedCornerDropDownMenu(
                         Text(text = category)
                     },
                     onClick = {
-                        selectedCategory.value = category
                         expanded.value = false
                         onCategorySelected(category)
                     }
                 )
             }
         }
-
     }
 }

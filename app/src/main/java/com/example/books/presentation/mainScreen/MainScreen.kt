@@ -3,6 +3,7 @@ package com.example.books.presentation.mainScreen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -48,7 +49,7 @@ fun MainScreen(navController: NavController, navigateToItem: (Screen) -> Unit) {
         }
     ) {
         if (viewModel.loadingState.value) {
-            Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(50.dp),
                     color = MaterialTheme.colorScheme.primaryContainer
@@ -67,11 +68,13 @@ fun MainScreen(navController: NavController, navigateToItem: (Screen) -> Unit) {
                     columns = GridCells.Fixed(2)
                 ) {
                     items(viewModel.listBooks.value) { book ->
-                        BookListItemUi(book = book)
+                        BookListItemUi(book = book){ selectedBook ->
+                            val route = Screen.EditBookScreen.createRoute(selectedBook)
+                            navController.navigate(route)
+                        }
                     }
                 }
             }
-
         }
     }
 }

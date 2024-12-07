@@ -8,16 +8,41 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
-class AddBookViewModel : ViewModel() {
+class AddEditBookViewModel : ViewModel() {
     val bookTitle = mutableStateOf("")
     val bookDescription = mutableStateOf("")
     val bookPrice = mutableStateOf("")
     val selectImageUri = mutableStateOf<Uri?>(null)
-    val selectedCategory = mutableStateOf("")
+    val imageUrl = mutableStateOf("")
+    val selectedCategory = mutableStateOf("Click to select a category")
     private val storage = Firebase.storage
     private val firestore = Firebase.firestore
     val errorMessage = mutableStateOf("")
     val loadingState = mutableStateOf(false)
+    val isEditState = mutableStateOf(false)
+    val isInitialized = mutableStateOf(false)
+    val keyBook = mutableStateOf("")
+
+    fun initialize(book: Book?) {
+        if (book != null) {
+            bookTitle.value = book.title
+            bookDescription.value = book.description
+            bookPrice.value = book.price
+            selectedCategory.value = book.category
+            imageUrl.value = book.imageUrl
+            keyBook.value = book.key
+            isEditState.value = true
+        } else {
+            bookTitle.value = ""
+            bookDescription.value = ""
+            bookPrice.value = ""
+            selectedCategory.value = ""
+            imageUrl.value = ""
+            keyBook.value = ""
+            isEditState.value = false
+        }
+        isInitialized.value = true
+    }
 
 
     fun saveImageUri(onSuccess: () -> Unit) {
@@ -26,9 +51,17 @@ class AddBookViewModel : ViewModel() {
         val storageRef = storage.reference
             .child("book_images")
             .child("images_$timeStamp.jpg")
-        if (selectImageUri.value == null) {
+        if (selectImageUri.value == null && !isEditState.value) {
             errorMessage.value = "Please select an image"
-            if(loadingState.value) loadingState.value = false
+            if (loadingState.value) loadingState.value = false
+            return
+        }
+        if (isEditState.value && selectImageUri.value == null) {
+            saveBook(imageUrl.value) {
+                loadingState.value = false
+                onSuccess()
+            }
+            errorMessage.value = ""
             return
         }
         errorMessage.value = ""
@@ -36,7 +69,7 @@ class AddBookViewModel : ViewModel() {
         val uploadTask = storageRef.putFile(uri)
         uploadTask.addOnSuccessListener {
             storageRef.downloadUrl.addOnSuccessListener { url ->
-                saveBook(url.toString()){
+                saveBook(url.toString()) {
                     loadingState.value = false
                     onSuccess()
                 }
@@ -48,7 +81,7 @@ class AddBookViewModel : ViewModel() {
         url: String,
         onSuccess: () -> Unit
     ) {
-        if (bookTitle.value.isEmpty() || bookDescription.value.isEmpty() || bookPrice.value.isEmpty() || selectedCategory.value.isEmpty()) {
+        if (bookTitle.value.isEmpty() || bookDescription.value.isEmpty() || bookPrice.value.isEmpty() || selectedCategory.value.isEmpty() || selectedCategory.value == "Click to select a category") {
             errorMessage.value = "Please fill all fields"
             if (loadingState.value) loadingState.value = false
             return
@@ -58,7 +91,7 @@ class AddBookViewModel : ViewModel() {
         val price = bookPrice.value
         val category = selectedCategory.value
         val db = firestore.collection("books")
-        val key = db.document().id
+        val key = if(isEditState.value) keyBook.value else db.document().id
         val book = Book(
             key = key,
             title = title,
